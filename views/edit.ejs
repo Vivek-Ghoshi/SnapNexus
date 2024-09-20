@@ -1,9 +1,5 @@
 <%- include('partials/header') %>
 
-<form hidden id="fileform" method="post" enctype="multipart/form-data" action="/upload">
-  <input id="file" type="file" name="image">
-</form>
-  
 <div class="w-full min-h-screen bg-zinc-900 text-white py-5">
     <div class="flex justify-between items-center px-4">
       <a class="text-sm text-blue-500" href="/profile"><i class="ri-arrow-left-s-line"></i> profile</a>
@@ -19,10 +15,12 @@
     <div class="gap-5 px-4 mt-10">
       <h3 class="text-lg leading-none">Edit Account Details</h3>
       <hr class="opacity-30 my-3">
-      <form class="w-full" action="/update" method="post">
-        <input class="px-3 mt-2 py-2 border-2 border-zinc-800 rounded-md block w-full bg-zinc-900" type="text" placeholder="username" name="username" value="">
-        <input class="px-3 mt-2 py-2 border-2 border-zinc-800 rounded-md block w-full bg-zinc-900" type="text" placeholder="name" name="name" value="">
-        <textarea class="px-3 mt-2 py-2 border-2 border-zinc-800 rounded-md block w-full bg-zinc-900 resize-none" placeholder="Bio" name="bio"></textarea>
+      <form class="w-full" action="/update" method="post" enctype="multipart/form-data">
+
+        <input hidden id="file" type="file" name="image" value="<%= user.profileImage %>">
+        <input class="px-3 mt-2 py-2 border-2 border-zinc-800 rounded-md block w-full bg-zinc-900" type="text" placeholder="username" name="username" value="<%= user.username %>">
+        <input class="px-3 mt-2 py-2 border-2 border-zinc-800 rounded-md block w-full bg-zinc-900" type="text" placeholder="name" name="name" value="<%= user.name %>">
+        <textarea class="px-3 mt-2 py-2 border-2 border-zinc-800 rounded-md block w-full bg-zinc-900 resize-none" placeholder="Bio" name="bio" aria-valuetext="<%= user.bio %>"></textarea>
         <input class="w-full bg-blue-500 px-3 py-3 rounded-md mt-2" type="submit" value="Update Details">
       </form>
     </div>
@@ -31,11 +29,7 @@
   <script>
     document.querySelector("#editbtn").addEventListener("click", function(){
       document.querySelector("#file").click();
-    })
-
-    document.querySelector("#file")
-    .addEventListener("change", function(){
-      document.querySelector("#fileform").submit();
     });
+
   </script>
 <%- include('partials/footer') %>

@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
         required: true,
     },
     name:{
-        type,String,
+        type:String,
         required: true,
     },
     password:{
@@ -17,11 +17,12 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    profileImg: Buffer,
-    posts:{
-        type: Array,
-        default:[]
-    },
+    bio: String,
+    profileImage: String,
+    posts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'post',
+    }],
 
 },{timestamps: true});
 

@@ -19,4 +19,4 @@ app.use("/",indexRouter);
 
 
 
-app.listen(process.env.PORT)
+app.listen(3000);

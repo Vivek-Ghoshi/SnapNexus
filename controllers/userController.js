@@ -2,14 +2,15 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+const postModel = require('../models/postModel');
 
 module.exports.registerRouteController = async function(req,res){
     try{
          let{ username,name,email,password} = req.body;
        let user = await userModel.findOne({email});
        if(user) return res.send('you already have an account please login');
-       bcrypt.genSalt(10,function(salt,err){
-        bcrypt.hash(password,salt,async function(hash,err){
+       bcrypt.genSalt(10,function(err,salt){
+        bcrypt.hash(password,salt,async function(err,hash){
          const createdUser = await userModel.create({
             name,
             username,
@@ -32,7 +33,7 @@ module.exports.loginRouteController = async function(req,res){
          let{email,password} = req.body;
          let user = await userModel.findOne({email});
          if(!user) return res.send('you dont have any account please create one');
-         bcrypt.compare(user.password, password, function(result,err){
+         bcrypt.compare(password, user.password, function(err,result){
             if(!result) return res.send('email or password did not match')
             else {
           const token = jwt.sign({email: user.email,id: user._id}, process.env.JWT_KEY);
@@ -55,4 +56,45 @@ module.exports.logoutRouteController = function (req,res){
     catch(err){
         console.log('err.message')
     }
+};
+
+module.exports.updateRouteController = async function(req,res){
+    try {
+        let {email} = req.user;
+        let user = await userModel.findOneAndUpdate({email},{username: req.body.username, name: req.body.name,bio: req.body.bio},{new:true});
+        if(req.file){
+            user.profileImage =  req.file.filename;
+        }
+        await user.save();
+        res.redirect('/profile');
+    } catch (error) {
+        console.log(error.message)
+    }
+};
+
+module.exports.uploadRouteController = async function (req,res){
+try {
+    let user = await userModel.findOne({email: req.user.email});
+    const post = await postModel.create({
+        Image: req.file.filename,
+        caption: req.body.caption,
+        user: user._id,
+    })
+    user.posts.push(post._id);
+    await user.save();
+    res.redirect('/feed');
+} catch (error) {
+    console.log(error.message)
 }
+};
+
+module.exports.searchRouteController = async function(req,res){
+try {
+    const regex = new RegExp(`^${req.params.username}`, 'i');
+   const users =  await userModel.find({username : regex});
+   res.json(users)
+
+} catch (error) {
+    console.log(error.message)
+}
+};
