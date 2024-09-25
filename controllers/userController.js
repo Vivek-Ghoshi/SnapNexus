@@ -151,7 +151,7 @@ module.exports.followRouteController = async function (req, res) {
     }
     await user.save();
     await userToFollow.save();
-    res.redirect("/profile");
+    res.redirect('/profile')
   } catch (error) {
     console.log(error.message);
   }
@@ -172,7 +172,7 @@ module.exports.unfollowRouteController = async function (req, res) {
       { $pull: { followers: user._id } }
     );
 
-    res.redirect("/profile");
+    res.redirect('/profile');
   } catch (error) {
     console.log(error.message);
   }

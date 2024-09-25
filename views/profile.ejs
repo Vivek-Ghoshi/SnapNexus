@@ -47,11 +47,11 @@
     <% if(user._id.toString() !==userId.toString()){%>
 
       <div class="w-full h-full flex gap-3 p-4 pl-6">
-        <form action="/follow/<%= user._id %>" method="POST">
+        <form class="follow-btn" action="/follow/<%= user._id %>" method="POST">
           <button class="w-24 h-full rounded-md text-white bg-blue-500" type="submit">Follow</button>
         </form>
 
-        <form action="/unfollow/<%= user._id %>" method="POST">
+        <form class="follow-btn" action="/unfollow/<%= user._id %>" method="POST">
           <button class="w-24 h-full rounded-md text-white bg-blue-500" type="submit">Unfollow</button>
         </form>
         <form action="" method="POST">
@@ -78,4 +78,25 @@
 
         </div>
   </div>
+  <!-- <script>
+  document.querySelector('.follow-btn').addEventListener('click', async function() {
+    event.preventDefault()
+    const userId = axios.get('/follow/${user._id}');
+    
+    const response = await fetch(`/follow/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  
+    const result = await response.json();
+    if (response.ok) {
+      this.innerText = 'Unfollow'; 
+    } else {
+      alert(result.message); 
+    }
+  });
+</script>
+   -->
   <%- include('partials/footer') %>

@@ -17,22 +17,24 @@ module.exports.feedPageController = async function (req, res) {
     path: 'comments.commentedBy',
     select: "username profileImage",
   });
-  res.render("feed", { footer: true, posts: posts , user: user});
+  res.render("feed", { footer: true, posts: posts , user: user,date: timeAgo.formatRelativeTime});
 };
-module.exports.uploadPageController = function (req, res) {
-  res.render("upload", { footer: true });
+module.exports.uploadPageController = async function (req, res) {
+  const user = await userModel.findOne({email: req.user.email});
+  res.render("upload", { footer: true , user});
 };
 module.exports.editPageController = async function (req, res) {
   let { email } = req.user;
   let user = await userModel.findOne({ email });
   res.render("edit", { footer: true, user });
 };
-module.exports.searchPageController = function (req, res) {
-  res.render("search", { footer: true });
+module.exports.searchPageController = async function (req, res) {
+  const user = await userModel.findOne({email: req.user.email});
+  res.render("search", { footer: true, user });
 };
 module.exports.searchProfileController = async function(req,res){
   try {
-    const user = await userModel.findOne({_id: req.params.id});
+    const user = await userModel.findOne({_id: req.params.id}).populate('posts');
     res.render('profile',{footer: true, user: user,userId: req.user.id})
   } catch (error) {
     console.log(error.message)
