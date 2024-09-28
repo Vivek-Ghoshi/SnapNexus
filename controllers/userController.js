@@ -133,7 +133,7 @@ module.exports.commentRouteController = async function (req, res) {
     });
 
     await post.save();
-    res.redirect("/profile");
+    res.redirect("/feed");
   } catch (error) {
     console.log(error.message);
   }

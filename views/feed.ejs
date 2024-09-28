@@ -67,27 +67,34 @@
               <%= post.caption %>
             </p>
             <h3 class="text-sm pl-3.5 text-gray-500 font-semibold mb-2">Comments:</h3>
-            <ul class="space-y-4 pl-3.5">
-              <% post.comments.forEach(comment=> { %>
-                <li class="flex items-start space-x-3">
-                  <img src="/images/uploads/<%= comment.commentedBy.profileImage %>" alt="Profile Picture"
-                    class="w-6 h-6 rounded-full object-cover">
-                  <div>
-                    <p class="text-sm text-gray-300">
-                      <strong class="font-semibold">
-                        <%= comment.commentedBy.username %>
-                      </strong>
-                      <span>
-                        <%= comment.theComment %>
-                      </span>
-                    </p>
-                    <p class="text-xs text-gray-500 mt-1">
-                      <%= new Date(comment.date).toLocaleDateString() %>
-                    </p>
-                  </div>
-                </li>
+            <div class="hide-scrollbar comments-container max-h-32 overflow-y-auto">
+              <ul class="space-y-4 pl-3.5">
+                <% post.comments.forEach(comment => { %>
+                  <li class=" items-start space-x-3">
+                    <img src="/images/uploads/<%= comment.commentedBy.profileImage %>" alt="Profile Picture"
+                      class="w-6 h-6 rounded-full object-cover">
+                    <div>
+                      <p class="text-sm text-gray-300">
+                        <strong class="font-semibold">
+                          <%= comment.commentedBy.username %>
+                        </strong>
+                        <span>
+                          <%= comment.theComment %>
+                        </span>
+                      </p>
+                      <p class="text-xs text-gray-500 mt-1">
+                        <%= new Date(comment.date).toLocaleDateString() %>
+                      </p>
+                    </div>
+                  </li>
                 <% }) %>
-            </ul>
+              </ul>
+              <% if (post.comments.length > 1) { %>
+                <button class="text-sm text-blue-400 mt-2 see-more-btn" data-post-id="<%= post._id %>">
+                  See more
+                </button>
+              <% } %>
+            </div>
           </div>
 
           <!-- Comment input -->
@@ -102,7 +109,7 @@
               <button 
                 type="submit" 
                 class="text-sm font-semibold text-blue-400 ml-3 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled
+                
               >
                 Post
               </button>
@@ -120,6 +127,41 @@
     commentIcon.addEventListener('click', function () {
       commentForm.toggleAttribute('hidden');
 
+    });
+
+    document.querySelectorAll('.see-more-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const postId = this.dataset.postId;
+        const commentsContainer = this.closest('.comments-container');
+        const commentsList = commentsContainer.querySelector('ul');
+        
+        // Fetch additional comments for this specific post
+        fetch(`/api/comments/${postId}`)
+          .then(response => response.json())
+          .then(comments => {
+            // Show up to 3 additional comments
+            comments.forEach(comment => {
+              const li = document.createElement('li');
+              li.className = 'flex items-start space-x-3 mt-4';
+              li.innerHTML = `
+                <img src="/images/uploads/${comment.commentedBy.profileImage}" alt="Profile Picture"
+                  class="w-6 h-6 rounded-full object-cover">
+                <div>
+                  <p class="text-sm text-gray-300">
+                    <strong class="font-semibold">${comment.commentedBy.username}</strong>
+                    <span>${comment.theComment}</span>
+                  </p>
+                  <p class="text-xs text-gray-500 mt-1">
+                    ${new Date(comment.date).toLocaleDateString()}
+                  </p>
+                </div>
+              `;
+              commentsList.appendChild(li);
+            });
+            
+            this.style.display = 'none';
+          });
+      });
     });
   </script>
 <%- include('partials/footer') %>
