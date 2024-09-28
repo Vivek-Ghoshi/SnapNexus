@@ -9,7 +9,9 @@ module.exports.loginPageController = function (req, res) {
 module.exports.profilePageController = async function (req, res) {
   let { email } = req.user;
   let user = await userModel.findOne({ email }).populate('posts').populate('followers', '_id').populate('following', '_id');
-  res.render("profile", { footer: true, user: user , userId: req.user.id});
+
+
+  res.render("profile", { footer: true, user: user ,userId: req.user.id});
 };
 module.exports.feedPageController = async function (req, res) {
   const user = await userModel.findOne({email: req.user.email})

@@ -143,7 +143,8 @@ module.exports.followRouteController = async function (req, res) {
   try {
     const user = await userModel.findOne({ email: req.user.email });
     const userToFollow = await userModel.findOne({ _id: req.params.id });
-    if (!user.following.includes(userToFollow._id)) {
+    const isFollowing = user.following.includes(userToFollow._id)
+    if (!isFollowing) {
       user.following.push(userToFollow._id);
       userToFollow.followers.push(user._id);
     } else {
@@ -151,7 +152,8 @@ module.exports.followRouteController = async function (req, res) {
     }
     await user.save();
     await userToFollow.save();
-    res.redirect('/profile')
+    res.redirect('/profile');
+
   } catch (error) {
     console.log(error.message);
   }

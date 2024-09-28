@@ -1,9 +1,8 @@
 <%- include('partials/header') %>
   <div class="w-full min-h-screen bg-gray-900 text-gray-100">
-    <!-- Instagram-like header -->
     <header class="sticky top-0 z-50 bg-gray-900 border-b border-gray-700 py-2 px-4">
       <div class="flex items-center justify-between max-w-screen-lg mx-auto">
-        <img class="h-8 invert" src="/images/logo.png" alt="Instagram">
+        <img class="h-8 invert text-white bg-transparent" src="/images/feed.png" alt="Instagram">
         <div class="flex items-center space-x-4">
           <i class="text-2xl ri-add-box-line text-gray-100"></i>
           <i class="text-2xl ri-heart-3-line text-gray-100"></i>
@@ -12,7 +11,6 @@
       </div>
     </header>
 
-    <!-- Stories section -->
     <div class="story px-4 flex gap-4 overflow-x-auto py-4 border-b border-gray-700">
       <div class="flex flex-col items-center flex-shrink-0">
         <div class="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center">
@@ -22,7 +20,6 @@
         </div>
         <span class="text-xs mt-1 text-gray-300">Your Story</span>
       </div>
-      <!-- Repeat this block for each story -->
       <div class="flex flex-col items-center flex-shrink-0">
         <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 to-fuchsia-600 p-0.5">
           <img class="w-full h-full rounded-full border-2 border-gray-900 object-cover"
@@ -31,14 +28,12 @@
         </div>
         <span class="text-xs mt-1 text-gray-300">username</span>
       </div>
-      <!-- ... more stories ... -->
+    
     </div>
 
-    <!-- Posts section -->
     <div class="posts mb-20 max-w-screen-sm mx-auto">
       <% posts.reverse().forEach(function(post){ %>
         <div class="post border-b border-gray-700 pb-4 mb-4">
-          <!-- Post header -->
           <div class="flex items-center justify-between px-4 py-2">
             <div class="flex items-center space-x-2">
               <img class="w-8 h-8 rounded-full object-cover" src="/images/uploads/<%= post.user.profileImage %>" alt="">
@@ -47,12 +42,10 @@
             <i class="ri-more-fill text-gray-300"></i>
           </div>
 
-          <!-- Post image -->
+         
           <div class="w-full aspect-square bg-gray-800 overflow-hidden">
             <img class="w-full h-full object-cover" src="/images/uploads/<%= post.Image %>" alt="">
           </div>
-
-          <!-- Post actions -->
           <div class="px-4 py-2">
             <div class="flex justify-between items-center">
               <div class="flex space-x-4">
@@ -73,7 +66,28 @@
               <span class="font-semibold text-gray-100"><%= post.user.username %></span>
               <%= post.caption %>
             </p>
-            <!-- ... existing comments code ... -->
+            <h3 class="text-sm pl-3.5 text-gray-500 font-semibold mb-2">Comments:</h3>
+            <ul class="space-y-4 pl-3.5">
+              <% post.comments.forEach(comment=> { %>
+                <li class="flex items-start space-x-3">
+                  <img src="/images/uploads/<%= comment.commentedBy.profileImage %>" alt="Profile Picture"
+                    class="w-6 h-6 rounded-full object-cover">
+                  <div>
+                    <p class="text-sm text-gray-300">
+                      <strong class="font-semibold">
+                        <%= comment.commentedBy.username %>
+                      </strong>
+                      <span>
+                        <%= comment.theComment %>
+                      </span>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      <%= new Date(comment.date).toLocaleDateString() %>
+                    </p>
+                  </div>
+                </li>
+                <% }) %>
+            </ul>
           </div>
 
           <!-- Comment input -->
@@ -99,5 +113,13 @@
     </div>
   </div>
 
-  <!-- ... existing script ... -->
+  <script>
+    const commentIcon = document.querySelector('#comment-icon');
+    const commentForm = document.querySelector('#comment-form');
+
+    commentIcon.addEventListener('click', function () {
+      commentForm.toggleAttribute('hidden');
+
+    });
+  </script>
 <%- include('partials/footer') %>

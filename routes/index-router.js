@@ -13,7 +13,7 @@ const {
   logoutRouteController,updateRouteController,
   uploadRouteController,searchRouteController,
   likeRouteController,commentRouteController,
-  followRouteController,unfollowRouteController
+  followRouteController,unfollowRouteController,
 } = require('../controllers/userController') ;   
 
  const {isLoggedIn} = require('../middlewares/isloggedIn-middleware');
@@ -40,6 +40,6 @@ router.get('/user/:id',isLoggedIn, searchProfileController);
 router.get('/post/like/:id',isLoggedIn,likeRouteController);
 router.post("/post/comment/:id",isLoggedIn,commentRouteController);
 router.post("/follow/:id",isLoggedIn,followRouteController);
-router.post('/unfollow/:id',isLoggedIn,unfollowRouteController);
+router.post("/unfollow/:id",isLoggedIn,unfollowRouteController);
 
 module.exports = router;
