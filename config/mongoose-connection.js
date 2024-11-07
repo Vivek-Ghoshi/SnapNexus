@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const MongoUri = "mongodb+srv://InstagramClone:InstagramClone@instagramclone.sozlj.mongodb.net/InstagramClone"
-mongoose.connect(MongoUri,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(MongoUri)
 .then(function(){
    console.log("connected to mongoose")
 })
